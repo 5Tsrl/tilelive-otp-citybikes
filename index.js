@@ -75,9 +75,13 @@ class GeoJSONSource {
 
 
   getTile(z, x, y, callback) {
-    let tile = this.tileIndex.getTile(z, x, y)
+    let tile
+    // protection from early calls, when tileIndex is not yet available
+    if(this.tileIndex){
+      tile = this.tileIndex.getTile(z, x, y)
+    }
 
-    if (tile === null) {
+    if (!this.tileIndex || tile === null) {
       tile = { features: [] }
     }
 
