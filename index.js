@@ -21,16 +21,18 @@ class GeoJSONSource {
 
   constructor(uri, callback) {
 
-    this.updateTileIndex(uri)
-
     const job = new CronJob('*/15 * * * * *', () => {
-      this.updateTileIndex(uri)
+      this.randomDelay(uri)
     })
     job.start()
 
     callback(null, this)
   }
 
+  randomDelay() {
+    // call index update with random delay (0-4 s) not to overload otp with n. mapserver instances concurrent queries
+    setTimeout(this.updateTileIndex, Math.random() * 4000)
+  }
 
   updateTileIndex(uri) {
     uri.protocol = "http:"
